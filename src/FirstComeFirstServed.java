@@ -23,6 +23,7 @@ public class FirstComeFirstServed {
     // instance variables - replace the example below with your own
     private ArrayList<Process> processArrayList;
     private ArrayList<Process> unsortedArrayList;
+    private MegaByte[] runningProcesses = new MegaByte[100];
     private String oneSimulation;//OVERALL STRING REPRESENTATION
     private float averageWaitingTime;
     private float averageResponseTime;
@@ -34,6 +35,7 @@ public class FirstComeFirstServed {
      *
      * @param processArrayList arrayList containing Process objects to endure
      * simulation
+     * @param unsortedArrayList
      */
     public FirstComeFirstServed(ArrayList<Process> processArrayList, ArrayList<Process> unsortedArrayList) {
         // initialise instance variables
@@ -43,6 +45,12 @@ public class FirstComeFirstServed {
         averageWaitingTime = 0;
         averageResponseTime = 0;
         averageTurnaroundTime = 0;
+        
+        for(int i = 0; i < runningProcesses.length; i++){
+            MegaByte megaByte = new MegaByte();
+            runningProcesses[i] = megaByte;
+        }
+        
     }
 
     public String simulateFCFS() {
@@ -50,7 +58,7 @@ public class FirstComeFirstServed {
         int quantum = 0;
         double timeRemaining;
         String timeChart = "";
-        Process currentProcess = processArrayList.get(numProcesses);//store first process
+        Process currentProcess = processArrayList.get(0);//store first process
         timeRemaining = currentProcess.getExpectedTime();
         boolean processRunning = true;
         boolean firstProcess = true;

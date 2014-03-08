@@ -1,5 +1,6 @@
 
 import java.util.*;
+import static java.lang.Math.pow;
 
 /**
  * This class generates a fixed number of processes that will be dictated by the
@@ -17,7 +18,7 @@ public class ProcessGenerator {
     private ArrayList<Process> unsortedArrayList;
     private Random generator;
     private Process newProcess;
-    private int RandomSeed;
+    private final int RandomSeed;
 
     /**
      * Constructor: objects of ProcessGenerator numProcesses is passed in as the
@@ -44,32 +45,34 @@ public class ProcessGenerator {
         int firstNumber = 1;
         float arrivalTime;
         int expectedTime;
-        int priority;
+        int processSize;
         
 
         generator = new Random(RandomSeed); //paramater is seed used for random number generator
 
         for (int i = 0; i < numProcesses; i++) {
-            String name = "";
+            String name = "[";
             //create random number for arrival time
-            arrivalTime = (float) (generator.nextDouble() * 59.0);
+            arrivalTime = (float) (generator.nextDouble() * 59.0);//60 seconds-minutes
             //create random number for expected run time
-            expectedTime = generator.nextInt(5) + 1;
-
+            expectedTime = (generator.nextInt(5) + 1);//1, 2, 3, 4, 5 second durations
+            //create random number for priority
+            processSize = (int)Math.pow(2, (generator.nextInt(4) + 2));//size is either 4, 8, 16, or 32 mb
             //create new Process object and pass in these four
+            
 
             if (letterCounter < 91) {
-                name += firstNumber + "-" + (char) (letterCounter);
+                name += firstNumber + "" + (char) (letterCounter);
                 letterCounter++;
             } else {
                 letterCounter = 65;
                 firstNumber++;
-                name += firstNumber + "-" + (char) (letterCounter);
+                name += firstNumber + "" + (char) (letterCounter);
                 letterCounter++;
             }
-            
+            name += "]";
 
-            newProcess = new Process(arrivalTime, expectedTime, name);
+            newProcess = new Process(arrivalTime, expectedTime, name, processSize);
             //put the Process object in array processArray using i as index
             processArrayList.add(newProcess);
 
@@ -109,6 +112,4 @@ public class ProcessGenerator {
     public ArrayList<Process> getUnsortedArrayList(){
         return unsortedArrayList;
     } 
-    
-    
 }

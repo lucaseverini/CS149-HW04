@@ -18,33 +18,148 @@ public class Main {
         printToFile printer = new printToFile();
         String simulationString = "";
         String totalFile = "";
-        String RR;
-        String FCFS;
-        String SJF;
-        String SRT;
-        String HPF;
+        String swapping;
+//        String RR;
+//        String FCFS;
+//        String SJF;
+//        String SRT;
 
         // ProcessGenerator: first parameter is number of processes to generate
         // second parameter is seed number for random function.
         ProcessGenerator newProcesses;
         ArrayList<Process> processArrayList;
 
-        RR = runRR();
-        totalFile += RR;
+//        FCFS = runFCFS();
+//        totalFile += FCFS;
+//       
+        swapping = runSwapping();
+        totalFile += swapping;
 
-        SJF = runSJF();
-        totalFile += SJF;
-
-        FCFS = runFCFS();
-        totalFile += FCFS;
-
-        SRT = runSRT();
-        totalFile += SRT;
-
-        printer.printToFile(totalFile);
+//        RR = runRR();
+//        totalFile += RR;
+//
+//        SJF = runSJF();
+//        totalFile += SJF;
+//        SRT = runSRT();
+//        totalFile += SRT;
+        printer.printToFile("fuck");
     }
 
-    public static String runRR() {
+//
+//    public static String runFCFS() {
+//        ArrayList<Process> processArrayList;
+//        ArrayList<Process> unsortedArrayList;
+//        String simulationString;
+//        String totalFile = "";
+//        float[] statistics;
+//        float averageWaitingTime = 0;
+//        float averageTurnaroundTime = 0;
+//        float averageResponseTime = 0;
+//        float throughput = 0;
+//        float totalAverageWaitingTime;
+//        float totalAverageTurnaroundTime;
+//        float totalAverageResponseTime;
+//        float totalThroughput;
+//        int i;
+//
+//        // ProcessGenerator: first parameter is number of processes to generate
+//        // second parameter is seed number for random function.
+//        ProcessGenerator newProcesses;
+//
+//        FirstComeFirstServed FCFS;
+//
+//        //Running 5 simulations, and adding results to 'totalFile' to be printed out
+//        for (i = 0; i < SIMULATIONS; i++) {
+//            newProcesses = new ProcessGenerator(PROCESSES, i);
+//            processArrayList = newProcesses.generateProcesses();
+//            unsortedArrayList = newProcesses.getUnsortedArrayList();
+//
+//            FCFS = new FirstComeFirstServed(processArrayList, unsortedArrayList);
+//            simulationString = FCFS.simulateFCFS();
+//
+//            statistics = FCFS.getStatistics();
+//            if (i == 0) {
+//                totalFile += "---------------------------------------------------------------------------------------";
+//            }
+//            totalFile += "\nSimulation #" + (i + 1) + " of First Come First Served: \n";
+//            totalFile += simulationString;
+//
+//            averageWaitingTime += statistics[0];
+//            averageResponseTime += statistics[2];
+//            averageTurnaroundTime += statistics[1];
+//            throughput += statistics[3];
+//        }
+//
+//        totalAverageWaitingTime = averageWaitingTime / i;
+//        totalAverageResponseTime = averageResponseTime / i;
+//        totalAverageTurnaroundTime = averageTurnaroundTime / i;
+//        totalThroughput = throughput / (float) i;
+//
+//        totalFile += "\nTotal Average Waiting Time for FCFS was: " + totalAverageWaitingTime;
+//        totalFile += "\nTotal Average Response Time for FCFS was: " + totalAverageResponseTime;
+//        totalFile += "\nTotal Average Turnaround for FCFS was: " + totalAverageTurnaroundTime;
+//        totalFile += "\nTotal Average Throughput for FCFS was: " + totalThroughput + "\n\n";
+//
+//        return totalFile;
+//    }
+//    public static String runRR() {
+//        ArrayList<Process> processArrayList;
+//        ArrayList<Process> unsortedArrayList;
+//
+//        String simulationString;
+//        String totalFile = "";
+//        float[] statistics;
+//        float averageWaitingTime = 0;
+//        float averageTurnaroundTime = 0;
+//        float averageResponseTime = 0;
+//        float throughput = 0;
+//        float totalAverageWaitingTime;
+//        float totalAverageTurnaroundTime;
+//        float totalAverageResponseTime;
+//        float totalThroughput;
+//        int i;
+//
+//        // ProcessGenerator: first parameter is number of processes to generate
+//        // second parameter is seed number for random function.
+//        ProcessGenerator newProcesses;
+//
+//        RoundRobin RR;
+//
+//        //Running 5 simulations, and adding results to 'totalFile' to be printed out
+//        for (i = 0; i < SIMULATIONS; i++) {
+//            newProcesses = new ProcessGenerator(PROCESSES, i);
+//            processArrayList = newProcesses.generateProcesses();
+//            unsortedArrayList = newProcesses.getUnsortedArrayList();
+//
+//            RR = new RoundRobin(processArrayList, unsortedArrayList);
+//            simulationString = RR.simulateRR();
+//            statistics = RR.getStatistics();
+//            if (i == 0) {
+//                totalFile += "---------------------------------------------------------------------------------------";
+//
+//            }
+//            totalFile += "\nSimulation #" + (i + 1) + " of Round Robin: \n";
+//            totalFile += simulationString;
+//
+//            averageWaitingTime += statistics[0];
+//            averageResponseTime += statistics[2];
+//            averageTurnaroundTime += statistics[1];
+//            throughput += statistics[3];
+//        }
+//
+//        totalAverageWaitingTime = averageWaitingTime / i;
+//        totalAverageResponseTime = averageResponseTime / i;
+//        totalAverageTurnaroundTime = averageTurnaroundTime / i;
+//        totalThroughput = throughput / (float) i;
+//
+//        totalFile += "\nTotal Average Waiting Time for RR was: " + totalAverageWaitingTime;
+//        totalFile += "\nTotal Average Response Time for RR was: " + totalAverageResponseTime;
+//        totalFile += "\nTotal Average Turnaround for RR was: " + totalAverageTurnaroundTime;
+//        totalFile += "\nTotal Average Throughput for RR was: " + totalThroughput + "\n\n";
+//
+//        return totalFile;
+//    }
+    public static String runSwapping() {
         ArrayList<Process> processArrayList;
         ArrayList<Process> unsortedArrayList;
 
@@ -65,7 +180,7 @@ public class Main {
         // second parameter is seed number for random function.
         ProcessGenerator newProcesses;
 
-        RoundRobin RR;
+        Swapping swapping;
 
         //Running 5 simulations, and adding results to 'totalFile' to be printed out
         for (i = 0; i < SIMULATIONS; i++) {
@@ -73,14 +188,14 @@ public class Main {
             processArrayList = newProcesses.generateProcesses();
             unsortedArrayList = newProcesses.getUnsortedArrayList();
 
-            RR = new RoundRobin(processArrayList, unsortedArrayList);
-            simulationString = RR.simulateRR();
-            statistics = RR.getStatistics();
+            swapping = new Swapping(processArrayList, unsortedArrayList);
+            simulationString = swapping.simulateSwapping();
+            statistics = swapping.getStatistics();
             if (i == 0) {
                 totalFile += "---------------------------------------------------------------------------------------";
 
             }
-            totalFile += "\nSimulation #" + (i + 1) + " of Round Robin: \n";
+            totalFile += "\nSimulation #" + (i + 1) + " of Swapping: \n";
             totalFile += simulationString;
 
             averageWaitingTime += statistics[0];
@@ -94,173 +209,115 @@ public class Main {
         totalAverageTurnaroundTime = averageTurnaroundTime / i;
         totalThroughput = throughput / (float) i;
 
-        totalFile += "\nTotal Average Waiting Time for RR was: " + totalAverageWaitingTime;
-        totalFile += "\nTotal Average Response Time for RR was: " + totalAverageResponseTime;
-        totalFile += "\nTotal Average Turnaround for RR was: " + totalAverageTurnaroundTime;
-        totalFile += "\nTotal Average Throughput for RR was: " + totalThroughput + "\n\n";
+        totalFile += "\nTotal Average Waiting Time for Swapping was: " + totalAverageWaitingTime;
+        totalFile += "\nTotal Average Response Time for Swapping was: " + totalAverageResponseTime;
+        totalFile += "\nTotal Average Turnaround for Swapping was: " + totalAverageTurnaroundTime;
+        totalFile += "\nTotal Average Throughput for Swapping was: " + totalThroughput + "\n\n";
 
         return totalFile;
     }
 
-    public static String runFCFS() {
-        ArrayList<Process> processArrayList;
-        ArrayList<Process> unsortedArrayList;
-        String simulationString;
-        String totalFile = "";
-        float[] statistics;
-        float averageWaitingTime = 0;
-        float averageTurnaroundTime = 0;
-        float averageResponseTime = 0;
-        float throughput = 0;
-        float totalAverageWaitingTime;
-        float totalAverageTurnaroundTime;
-        float totalAverageResponseTime;
-        float totalThroughput;
-        int i;
-
-        // ProcessGenerator: first parameter is number of processes to generate
-        // second parameter is seed number for random function.
-        ProcessGenerator newProcesses;
-
-        FirstComeFirstServed FCFS;
-
-        //Running 5 simulations, and adding results to 'totalFile' to be printed out
-        for (i = 0; i < SIMULATIONS; i++) {
-            newProcesses = new ProcessGenerator(PROCESSES, i);
-            processArrayList = newProcesses.generateProcesses();
-            unsortedArrayList = newProcesses.getUnsortedArrayList();
-
-            FCFS = new FirstComeFirstServed(processArrayList, unsortedArrayList);
-            simulationString = FCFS.simulateFCFS();
-
-            statistics = FCFS.getStatistics();
-            if (i == 0) {
-                totalFile += "---------------------------------------------------------------------------------------";
-            }
-            totalFile += "\nSimulation #" + (i + 1) + " of First Come First Served: \n";
-            totalFile += simulationString;
-
-            averageWaitingTime += statistics[0];
-            averageResponseTime += statistics[2];
-            averageTurnaroundTime += statistics[1];
-            throughput += statistics[3];
-        }
-
-        totalAverageWaitingTime = averageWaitingTime / i;
-        totalAverageResponseTime = averageResponseTime / i;
-        totalAverageTurnaroundTime = averageTurnaroundTime / i;
-        totalThroughput = throughput / (float) i;
-
-        totalFile += "\nTotal Average Waiting Time for FCFS was: " + totalAverageWaitingTime;
-        totalFile += "\nTotal Average Response Time for FCFS was: " + totalAverageResponseTime;
-        totalFile += "\nTotal Average Turnaround for FCFS was: " + totalAverageTurnaroundTime;
-        totalFile += "\nTotal Average Throughput for FCFS was: " + totalThroughput + "\n\n";
-
-        return totalFile;
-    }
-
-    public static String runSJF() {
-        ArrayList<Process> processArrayList;
-        ArrayList<Process> unsortedArrayList;
-        String simulationString;
-        String totalFile = "";
-        float[] statistics;
-        float averageWaitingTime = 0;
-        float averageTurnaroundTime = 0;
-        float averageResponseTime = 0;
-        float throughput = 0;
-        float totalAverageWaitingTime;
-        float totalAverageTurnaroundTime;
-        float totalAverageResponseTime;
-        float totalThroughput;
-        int i;
-
-        // ProcessGenerator: first parameter is number of processes to generate
-        // second parameter is seed number for random function.
-        ProcessGenerator newProcesses;
-
-        ShortestJobFirst SJF;
-
-        //Running 5 simulations, and adding results to 'totalFile' to be printed out
-        for (i = 0; i < SIMULATIONS; i++) {
-            newProcesses = new ProcessGenerator(PROCESSES, i);
-            processArrayList = newProcesses.generateProcesses();
-            unsortedArrayList = newProcesses.getUnsortedArrayList();
-
-            SJF = new ShortestJobFirst(processArrayList, unsortedArrayList);
-            simulationString = SJF.simulateSJF();
-            statistics = SJF.getStatistics();
-            if (i == 0) {
-                totalFile += "---------------------------------------------------------------------------------------";
-            }
-            totalFile += "\nSimulation #" + (i + 1) + " of Shortest Job First: \n";
-            totalFile += simulationString;
-
-            averageWaitingTime += statistics[0];
-            averageResponseTime += statistics[2];
-            averageTurnaroundTime += statistics[1];
-            throughput += statistics[3];
-        }
-
-        totalAverageWaitingTime = averageWaitingTime / i;
-        totalAverageResponseTime = averageResponseTime / i;
-        totalAverageTurnaroundTime = averageTurnaroundTime / i;
-        totalThroughput = throughput / (float) i;
-
-        totalFile += "\nTotal Average Waiting Time for SJF was: " + totalAverageWaitingTime;
-        totalFile += "\nTotal Average Response Time for SJF was: " + totalAverageResponseTime;
-        totalFile += "\nTotal Average Turnaround for SJF was: " + totalAverageTurnaroundTime;
-        totalFile += "\nTotal Average Throughput for SJF was: " + totalThroughput + "\n\n";
-
-        return totalFile;
-    }
-
-    public static String runSRT() {
-        ArrayList<Process> processArrayList;
-        String simulationString;
-        String totalFile = "";
-        float[] statistics;
-        float averageWaitingTime = 0;
-        float averageTurnaroundTime = 0;
-        float averageResponseTime = 0;
-        float throughput = 0;
-        float totalAverageWaitingTime;
-        float totalAverageTurnaroundTime;
-        float totalAverageResponseTime;
-        float totalThroughput;
-
-        for (int idx = 0; idx < SIMULATIONS; idx++) {
-            ProcessGenerator procGen = new ProcessGenerator(PROCESSES, idx);
-            processArrayList = procGen.generateProcesses();
-
-            ShortestRemainingTime SRT = new ShortestRemainingTime(processArrayList);
-
-            simulationString = SRT.simulatePreemptive(QUANTA);
-
-            statistics = SRT.getStatistics();
-            if (idx == 0) {
-                totalFile += "---------------------------------------------------------------------------------------";
-            }
-            totalFile += "\nSimulation #" + (idx + 1) + " of Shortest Remaining  Time (SRT): \n";
-            totalFile += simulationString;
-
-            averageWaitingTime += statistics[0];
-            averageResponseTime += statistics[2];
-            averageTurnaroundTime += statistics[1];
-            throughput += statistics[3];
-        }
-
-        totalAverageWaitingTime = averageWaitingTime / SIMULATIONS;
-        totalAverageResponseTime = averageResponseTime / SIMULATIONS;
-        totalAverageTurnaroundTime = averageTurnaroundTime / SIMULATIONS;
-        totalThroughput = throughput / SIMULATIONS;
-
-        totalFile += "\nTotal Average Waiting Time for SRT was: " + totalAverageWaitingTime;
-        totalFile += "\nTotal Average Response Time for SRT was: " + totalAverageResponseTime;
-        totalFile += "\nTotal Average Turnaround for SRT was: " + totalAverageTurnaroundTime;
-        totalFile += "\nTotal Average Throughput for SRT was: " + totalThroughput + "\n\n";
-
-        return totalFile;
-    }
-
+//    public static String runSJF() {
+//        ArrayList<Process> processArrayList;
+//        ArrayList<Process> unsortedArrayList;
+//        String simulationString;
+//        String totalFile = "";
+//        float[] statistics;
+//        float averageWaitingTime = 0;
+//        float averageTurnaroundTime = 0;
+//        float averageResponseTime = 0;
+//        float throughput = 0;
+//        float totalAverageWaitingTime;
+//        float totalAverageTurnaroundTime;
+//        float totalAverageResponseTime;
+//        float totalThroughput;
+//        int i;
+//
+//        // ProcessGenerator: first parameter is number of processes to generate
+//        // second parameter is seed number for random function.
+//        ProcessGenerator newProcesses;
+//
+//        ShortestJobFirst SJF;
+//
+//        //Running 5 simulations, and adding results to 'totalFile' to be printed out
+//        for (i = 0; i < SIMULATIONS; i++) {
+//            newProcesses = new ProcessGenerator(PROCESSES, i);
+//            processArrayList = newProcesses.generateProcesses();
+//            unsortedArrayList = newProcesses.getUnsortedArrayList();
+//
+//            SJF = new ShortestJobFirst(processArrayList, unsortedArrayList);
+//            simulationString = SJF.simulateSJF();
+//            statistics = SJF.getStatistics();
+//            if (i == 0) {
+//                totalFile += "---------------------------------------------------------------------------------------";
+//            }
+//            totalFile += "\nSimulation #" + (i + 1) + " of Shortest Job First: \n";
+//            totalFile += simulationString;
+//
+//            averageWaitingTime += statistics[0];
+//            averageResponseTime += statistics[2];
+//            averageTurnaroundTime += statistics[1];
+//            throughput += statistics[3];
+//        }
+//
+//        totalAverageWaitingTime = averageWaitingTime / i;
+//        totalAverageResponseTime = averageResponseTime / i;
+//        totalAverageTurnaroundTime = averageTurnaroundTime / i;
+//        totalThroughput = throughput / (float) i;
+//
+//        totalFile += "\nTotal Average Waiting Time for SJF was: " + totalAverageWaitingTime;
+//        totalFile += "\nTotal Average Response Time for SJF was: " + totalAverageResponseTime;
+//        totalFile += "\nTotal Average Turnaround for SJF was: " + totalAverageTurnaroundTime;
+//        totalFile += "\nTotal Average Throughput for SJF was: " + totalThroughput + "\n\n";
+//
+//        return totalFile;
+//    }
+//
+//    public static String runSRT() {
+//        ArrayList<Process> processArrayList;
+//        String simulationString;
+//        String totalFile = "";
+//        float[] statistics;
+//        float averageWaitingTime = 0;
+//        float averageTurnaroundTime = 0;
+//        float averageResponseTime = 0;
+//        float throughput = 0;
+//        float totalAverageWaitingTime;
+//        float totalAverageTurnaroundTime;
+//        float totalAverageResponseTime;
+//        float totalThroughput;
+//
+//        for (int idx = 0; idx < SIMULATIONS; idx++) {
+//            ProcessGenerator procGen = new ProcessGenerator(PROCESSES, idx);
+//            processArrayList = procGen.generateProcesses();
+//
+//            ShortestRemainingTime SRT = new ShortestRemainingTime(processArrayList);
+//
+//            simulationString = SRT.simulatePreemptive(QUANTA);
+//
+//            statistics = SRT.getStatistics();
+//            if (idx == 0) {
+//                totalFile += "---------------------------------------------------------------------------------------";
+//            }
+//            totalFile += "\nSimulation #" + (idx + 1) + " of Shortest Remaining  Time (SRT): \n";
+//            totalFile += simulationString;
+//
+//            averageWaitingTime += statistics[0];
+//            averageResponseTime += statistics[2];
+//            averageTurnaroundTime += statistics[1];
+//            throughput += statistics[3];
+//        }
+//
+//        totalAverageWaitingTime = averageWaitingTime / SIMULATIONS;
+//        totalAverageResponseTime = averageResponseTime / SIMULATIONS;
+//        totalAverageTurnaroundTime = averageTurnaroundTime / SIMULATIONS;
+//        totalThroughput = throughput / SIMULATIONS;
+//
+//        totalFile += "\nTotal Average Waiting Time for SRT was: " + totalAverageWaitingTime;
+//        totalFile += "\nTotal Average Response Time for SRT was: " + totalAverageResponseTime;
+//        totalFile += "\nTotal Average Turnaround for SRT was: " + totalAverageTurnaroundTime;
+//        totalFile += "\nTotal Average Throughput for SRT was: " + totalThroughput + "\n\n";
+//
+//        return totalFile;
+//    }
 }

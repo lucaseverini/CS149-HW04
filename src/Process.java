@@ -18,7 +18,8 @@ public class Process {
     private float timeToFinish;		// between 0.1 and 10. Is the time remaining to process completion (decremented by 1 every loop)
     private boolean started;
     private Process nextProcess;	// Next process in the list with same priority (used in HPF)
-
+    private int processSize;
+    
     /**
      * Constructor for objects of class Process
      *
@@ -26,13 +27,14 @@ public class Process {
      * @param expectedTime
      * @param name
      */
-    public Process(float arrivalTime, int expectedTime, String name) 
+    public Process(float arrivalTime, int expectedTime, String name, int processSize) 
 	{
         this.arrivalTime = arrivalTime;
         this.expectedTime = expectedTime;
-        this.name = "[" + name + "]";
+        this.name = name;
         this.timeRemaining = expectedTime;
         this.processStarted = false;
+        this.processSize = processSize;
     }
 
 	/**
@@ -286,7 +288,8 @@ public class Process {
         public String toString() {
         String processString;
         processString = name + "\tArrival time is:  " + arrivalTime
-                + ",\tExpected time is:  " + expectedTime;
+                + ",\tExpected time is:  " + expectedTime 
+                + ",\tProcess Size is: " + processSize + "\n";
 
         return processString;
     }

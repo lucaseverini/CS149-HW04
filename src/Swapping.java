@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @RomeoStevens
  */
-public class RoundRobin {
+public class Swapping {
 
     // instance variables
     private final ArrayList<Process> processArrayList;
@@ -26,13 +26,13 @@ public class RoundRobin {
     private int throughput;
 
     /**
-     * Constructor for objects of class RoundRobin
+     * Constructor for objects of class Swapping
      *
      * @param processArrayList arrayList containing Process objects to endure
      * simulation
      * @param unsortedArrayList arraylist representing unsorted processes
      */
-    public RoundRobin(ArrayList<Process> processArrayList, ArrayList<Process> unsortedArrayList) {
+    public Swapping(ArrayList<Process> processArrayList, ArrayList<Process> unsortedArrayList) {
         // initialise instance variables
         runningProcesses = new MegaByte[100];
         this.processArrayList = processArrayList;
@@ -42,44 +42,53 @@ public class RoundRobin {
         averageTurnaroundTime = 0;
         processQueue = new ArrayList<>();
         processesDone = new ArrayList<>();
-
         MegaByte megaByte;
         oneSimulation = "";
+        startSimulation = "";
+
         //setting up the process map as empty: .............., and so on
         for (int i = 0; i < runningProcesses.length; i++) {
             megaByte = new MegaByte();
             runningProcesses[i] = megaByte;
-            startSimulation += runningProcesses[i].getMegaByte();
-        }        
+            if ( i != 0 && (i % 20) == 0) {
+                startSimulation += "\n" + runningProcesses[i].getMegaByte();
+            } else {
+                startSimulation += runningProcesses[i].getMegaByte();
+            }
+        }
+        System.out.println(startSimulation);
     }
 
-    public String simulateRR() {
+    /**
+     *
+     * @return
+     */
+    public String simulateSwapping() {
         int finishedProcesses = 0;
         int startedProcesses = 0;
         int quantum = 0;
-        String timeChart = "";
+        String timeChart = startSimulation;
         boolean firstProcess = true;
         boolean processRunning = true;
         Process temporary;
 
         //System.out.println(oneSimulation);
-
         introduceProcess();
 
         //as long as active processes exist AND we have no processes that need attention
         while (processRunning && !(processQueue.isEmpty() && processArrayList.isEmpty())) {
 
             //if process Queue is empty, process Array List is NOT empty, and open for service
-            if (processQueue.isEmpty() && !processArrayList.isEmpty() && quantum < 99) {
+            if (processQueue.isEmpty() && !processArrayList.isEmpty() && quantum < 59) {
                 processQueue.add(processArrayList.remove(0));
                 while (processQueue.get(0).getArrivalTime() > quantum) {
                     quantum++;
-                    timeChart += "[---]";
+                    timeChart += quantum + " " + startSimulation + "\n";
                 }
             }
 
             //make sure anything that has arrived is put into processQueue
-            if (quantum < 99) {
+            if (quantum < 59) {
                 while (!processArrayList.isEmpty() && processArrayList.get(0).getArrivalTime() < quantum) {
                     processQueue.add(processArrayList.remove(0));
                 }
@@ -98,11 +107,10 @@ public class RoundRobin {
                 firstProcess = false;
             }
             //run process
-            if (!processQueue.isEmpty()) 
-			{
+            if (!processQueue.isEmpty()) {
                 processQueue.get(0).runProcess();//timeRemaining -= 1;
 
-                if (quantum < 99) {//If the simulation is active
+                if (quantum < 59) {//If the simulation is active
                     if (!processQueue.get(0).getProcessStarted()) {
                         processQueue.get(0).setStartTime(quantum);
                         startedProcesses++;
@@ -116,7 +124,7 @@ public class RoundRobin {
                         }
                         temporary = processQueue.remove(0);
                         processQueue.add(temporary);
-                        
+
                     } else if (processQueue.get(0).getTimeRemaining() < 0) {
                         if ((quantum % 10) == 0) {//regarding formatting
                             timeChart += ("\n" + processQueue.get(0).getName());
@@ -129,7 +137,7 @@ public class RoundRobin {
                         temporary = processQueue.remove(0);
                         processesDone.add(temporary);
                     }
-                } else if (quantum >= 99) {//Simulation becomes inactive, does not accept new processes
+                } else if (quantum >= 59) {//Simulation becomes inactive, does not accept new processes
                     //remove any processes that have not been started
                     while (!processQueue.isEmpty() && !processQueue.get(0).getProcessStarted()) {
                         processQueue.remove(0);
@@ -168,7 +176,7 @@ public class RoundRobin {
 
         throughput = processesDone.size();
 
-//        oneSimulation += timeChart;
+        oneSimulation += timeChart;
 
         oneSimulation += "\n" + getStringOfAverages(processesDone.size());
         return oneSimulation;//this is the OVERALL STRING REPRESENTATION
@@ -239,9 +247,5 @@ public class RoundRobin {
     public float[] getStatistics() {
         float[] averages = {averageWaitingTime, averageResponseTime, averageTurnaroundTime, throughput};
         return averages;
-    }
-
-    public int RR(int y) {
-        return y + y;
     }
 }

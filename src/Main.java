@@ -10,8 +10,8 @@ import java.util.*;
  */
 public class Main {
 
-    public static final int SIMULATIONS = 5;
-    public static final int PROCESSES = 100;
+    public static final int SIMULATIONS = 1;
+    public static final int PROCESSES = 2;
     public static final int QUANTA = 60;
 
     public static void main(String[] args) {
@@ -42,7 +42,7 @@ public class Main {
 //        totalFile += SJF;
 //        SRT = runSRT();
 //        totalFile += SRT;
-        printer.printToFile("fuck");
+        printer.printToFile(totalFile);
     }
 
 //
@@ -165,15 +165,9 @@ public class Main {
 
         String simulationString;
         String totalFile = "";
-        float[] statistics;
-        float averageWaitingTime = 0;
-        float averageTurnaroundTime = 0;
-        float averageResponseTime = 0;
+
         float throughput = 0;
-        float totalAverageWaitingTime;
-        float totalAverageTurnaroundTime;
-        float totalAverageResponseTime;
-        float totalThroughput;
+        float averageThroughput;
         int i;
 
         // ProcessGenerator: first parameter is number of processes to generate
@@ -190,7 +184,6 @@ public class Main {
 
             swapping = new Swapping(processArrayList, unsortedArrayList);
             simulationString = swapping.simulateSwapping();
-            statistics = swapping.getStatistics();
             if (i == 0) {
                 totalFile += "---------------------------------------------------------------------------------------";
 
@@ -198,21 +191,12 @@ public class Main {
             totalFile += "\nSimulation #" + (i + 1) + " of Swapping: \n";
             totalFile += simulationString;
 
-            averageWaitingTime += statistics[0];
-            averageResponseTime += statistics[2];
-            averageTurnaroundTime += statistics[1];
-            throughput += statistics[3];
+            throughput += swapping.getThroughput();
         }
 
-        totalAverageWaitingTime = averageWaitingTime / i;
-        totalAverageResponseTime = averageResponseTime / i;
-        totalAverageTurnaroundTime = averageTurnaroundTime / i;
-        totalThroughput = throughput / (float) i;
+        averageThroughput = throughput / (float) i;
 
-        totalFile += "\nTotal Average Waiting Time for Swapping was: " + totalAverageWaitingTime;
-        totalFile += "\nTotal Average Response Time for Swapping was: " + totalAverageResponseTime;
-        totalFile += "\nTotal Average Turnaround for Swapping was: " + totalAverageTurnaroundTime;
-        totalFile += "\nTotal Average Throughput for Swapping was: " + totalThroughput + "\n\n";
+        totalFile += "\nTotal Average Throughput for Swapping was: " + averageThroughput + "\n\n";
 
         return totalFile;
     }

@@ -278,6 +278,10 @@ public class Process {
 	{
         timeRemaining -= 1;
     }
+    
+    public int getProcessSize(){
+        return processSize;
+    }
 
     /**
      * This returns a string representation of the Process object

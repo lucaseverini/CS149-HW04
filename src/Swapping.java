@@ -16,14 +16,15 @@ public class Swapping {
     private final ArrayList<Process> processArrayList;
     private final ArrayList<Process> unsortedArrayList;
     private final ArrayList<Process> processQueue;
+    private final ArrayList<Process> processesInMemory;
     private final ArrayList<Process> processesDone;
-    private MegaByte[] runningProcesses;
-    private String oneSimulation;//OVERALL STRING REPRESENTATION
-    private String startSimulation;//starts out as empty: ...........
-    private float averageWaitingTime;
-    private float averageResponseTime;
-    private float averageTurnaroundTime;
+    private ArrayList<Gaps> gapList;
+    private final MegaByte[] memory;
+    private String currentMemoryArray;//OVERALL STRING REPRESENTATION
+    private String initialMemoryArray;//starts out as empty: ...........
+    private String oneSimulation;
     private int throughput;
+    private boolean leave;
 
     /**
      * Constructor for objects of class Swapping
@@ -34,29 +35,32 @@ public class Swapping {
      */
     public Swapping(ArrayList<Process> processArrayList, ArrayList<Process> unsortedArrayList) {
         // initialise instance variables
-        runningProcesses = new MegaByte[100];
+        memory = new MegaByte[100];
         this.processArrayList = processArrayList;
         this.unsortedArrayList = unsortedArrayList;
-        averageWaitingTime = 0;
-        averageResponseTime = 0;
-        averageTurnaroundTime = 0;
         processQueue = new ArrayList<>();
+        processesInMemory = new ArrayList<>();
         processesDone = new ArrayList<>();
+        gapList = new ArrayList<>();
         MegaByte megaByte;
+        currentMemoryArray = "";
+        initialMemoryArray = "";
         oneSimulation = "";
-        startSimulation = "";
 
         //setting up the process map as empty: .............., and so on
-        for (int i = 0; i < runningProcesses.length; i++) {
+        for (int i = 0; i < memory.length; i++) {
             megaByte = new MegaByte();
-            runningProcesses[i] = megaByte;
-            if ( i != 0 && (i % 20) == 0) {
-                startSimulation += "\n" + runningProcesses[i].getMegaByte();
+            memory[i] = megaByte;
+            if (i != 0 && (i % 20) == 0) {
+                initialMemoryArray += "\n" + memory[i].getMegaByte();
             } else {
-                startSimulation += runningProcesses[i].getMegaByte();
+                initialMemoryArray += memory[i].getMegaByte();
             }
         }
-        System.out.println(startSimulation);
+        //gapList has one gap object, that 'fills' whole arraylist
+        Gaps gap = new Gaps();
+        gapList.add(gap);
+        //System.out.println(startSimulation);
     }
 
     /**
@@ -64,165 +68,110 @@ public class Swapping {
      * @return
      */
     public String simulateSwapping() {
-        int finishedProcesses = 0;
-        int startedProcesses = 0;
+
         int quantum = 0;
-        String timeChart = startSimulation;
-        boolean firstProcess = true;
-        boolean processRunning = true;
-        Process temporary;
+        String timeChart = "";
 
         //System.out.println(oneSimulation);
         introduceProcess();
 
-        //as long as active processes exist AND we have no processes that need attention
-        while (processRunning && !(processQueue.isEmpty() && processArrayList.isEmpty())) {
+        //gapList = getGaps();
+        //as long as open AND (processQueue and processArrayList) arent empty at same time
+        while (quantum < 60 && !(processQueue.isEmpty() && processArrayList.isEmpty())) {
+            System.out.println("\n1\n");
 
-            //if process Queue is empty, process Array List is NOT empty, and open for service
-            if (processQueue.isEmpty() && !processArrayList.isEmpty() && quantum < 59) {
+            //remove processes that have ended //# 2, 3, 4
+            if (!processesInMemory.isEmpty()) {
+                System.out.println("\n2\n");
+
+                for (int rCounter = 0; rCounter < processesInMemory.size(); rCounter++) {
+                    System.out.println("\n3\n");
+
+                    if (processesInMemory.get(rCounter).getTimeRemaining() <= 0) {
+                        removeFromMemory(processesInMemory.get(rCounter).getName());
+                        processesDone.add(processesInMemory.remove(0));
+                        System.out.println("\n4\n");
+                    }
+                }
+            }//gaps from process that ended before this quantum starts are empty 
+
+            //if process Queue is empty, process ArrayList is NOT empty
+            //put first element of processArrayList into processQueue and 'wait' until it has 'arrived'
+            //# 5, 6
+            if (processQueue.isEmpty() && !processArrayList.isEmpty()) {
+                System.out.println("\n5\n");
+
                 processQueue.add(processArrayList.remove(0));
-                while (processQueue.get(0).getArrivalTime() > quantum) {
+                while (quantum < 60 && processQueue.get(0).getArrivalTime() > quantum) {
+                    System.out.println("\n6\n");
                     quantum++;
-                    timeChart += quantum + " " + startSimulation + "\n";
+                    timeChart += "Minute " + quantum;
                 }
-            }
+            }//processQueue has an element, and it has arrived
 
-            //make sure anything that has arrived is put into processQueue
-            if (quantum < 59) {
-                while (!processArrayList.isEmpty() && processArrayList.get(0).getArrivalTime() < quantum) {
-                    processQueue.add(processArrayList.remove(0));
-                }
-            }
-            //not duplicate code, ensures program doesn't run for ever if not fed enough processes
+            //anything in processArrayList that has arrived -> goes into processQueue
             while (!processArrayList.isEmpty() && processArrayList.get(0).getArrivalTime() < quantum) {
+                System.out.println("\n7\n");
                 processQueue.add(processArrayList.remove(0));
-            }
+            }//now we have a processQueue that has all processes that have 'arrived'
 
-            //if its the first process, make sure start time = quantum
-            if (!processQueue.isEmpty() && firstProcess) {
-                if (!processQueue.get(0).getProcessStarted()) {
-                    processQueue.get(0).setStartTime(quantum);
-                    startedProcesses++;
-                }
-                firstProcess = false;
-            }
-            //run process
-            if (!processQueue.isEmpty()) {
-                processQueue.get(0).runProcess();//timeRemaining -= 1;
+            //(start(put in memory) any process that has arrived and fits)
+            //for every process in the processQueue, in order of arrival:
+            //check if can fit-> yes: place into memory, no: wait until next minute/second
+            //# 8, 9, 
+            
+            boolean foundGap;// = false; 
+            
+            leave = false;
+            for (int pCounter = 0; pCounter < processQueue.size(); pCounter++) {
+                foundGap = false; 
+                for (int gapCounter = 0; gapCounter < gapList.size(); gapCounter++) {
+                    System.out.println("\n8\n");
+                    if (processQueue.get(0).getProcessSize() <= gapList.get(gapCounter).getGapSize()) {
+                        System.out.println("\n9\n");
+                        //place process into memory that it fits in,                 manipulate currentMemoryArray
+                        int gapLocation = gapList.get(gapCounter).getGapLocation();
+                        String processName = processQueue.get(0).getName();
+                        int processSize = processQueue.get(0).getProcessSize();
 
-                if (quantum < 59) {//If the simulation is active
-                    if (!processQueue.get(0).getProcessStarted()) {
+                        addToMemory(gapLocation, processSize, processName);
+                        //print to text
+                        timeChart += "Minute " + quantum + ":\n" + currentMemoryArray + "\n";
+                        //set start time of process added
                         processQueue.get(0).setStartTime(quantum);
-                        startedProcesses++;
-                    }
+                        //remove from queue, add to memory arrayList
+                        processesInMemory.add(processQueue.remove(0));
+                        foundGap = true; 
+                        break;
+                    } //else {
+                        //leave = true;
+                        //break;
+                    //}
+                }//process in processQueue has been placed if space in memory exists
+//                if (leave) {
+//                    break;
+//                }
+                if (foundGap == false)
+                    break; 
+            }
 
-                    if (processQueue.get(0).getTimeRemaining() > 0) {
-                        if ((quantum % 10) == 0) {
-                            timeChart += ("\n" + processQueue.get(0).getName());
-                        } else {
-                            timeChart += processQueue.get(0).getName();
-                        }
-                        temporary = processQueue.remove(0);
-                        processQueue.add(temporary);
-
-                    } else if (processQueue.get(0).getTimeRemaining() < 0) {
-                        if ((quantum % 10) == 0) {//regarding formatting
-                            timeChart += ("\n" + processQueue.get(0).getName());
-                        } else {
-                            timeChart += processQueue.get(0).getName();
-                        }
-                        processQueue.get(0).setFinishTime(quantum + 1);
-//                        lastProcessEnded = true;
-                        finishedProcesses++;
-                        temporary = processQueue.remove(0);
-                        processesDone.add(temporary);
-                    }
-                } else if (quantum >= 59) {//Simulation becomes inactive, does not accept new processes
-                    //remove any processes that have not been started
-                    while (!processQueue.isEmpty() && !processQueue.get(0).getProcessStarted()) {
-                        processQueue.remove(0);
-                    }
-
-                    if (!processQueue.isEmpty() && processQueue.get(0).getProcessStarted()) {
-                        if (processQueue.get(0).getTimeRemaining() < 0) {
-                            if ((quantum % 10) == 0) {
-                                timeChart += ("\n" + processQueue.get(0).getName());
-                            } else {
-                                timeChart += processQueue.get(0).getName();
-                            }
-                            finishedProcesses++;
-                            processQueue.get(0).setFinishTime(quantum + 1);
-                            temporary = processQueue.remove(0);
-                            processesDone.add(temporary);
-                        } else if (processQueue.get(0).getTimeRemaining() > 0) {
-                            if ((quantum % 10) == 0) {
-                                timeChart += ("\n" + processQueue.get(0).getName());
-                            } else {
-                                timeChart += processQueue.get(0).getName();
-                            }
-                            temporary = processQueue.remove(0);
-                            processQueue.add(temporary);
-                        }
-                    } else {
-                        processRunning = false;
-                        System.out.println("something broke!!!!!!!!!!");
-                    }
+            //run processes that are active
+            if (!processesInMemory.isEmpty()) {
+//                System.out.println("\n10\n");
+                for (int runningCounter = 0; runningCounter < processesInMemory.size(); runningCounter++) {
+//                    System.out.println("\n11\n");
+                    processesInMemory.get(0).runProcess();//timeRemaining -= 1;
                 }
             }
-            startedProcesses = processesDone.size();
-
             quantum++;
+//            System.out.println("\n12\n");
         }
-
-        throughput = processesDone.size();
-
+//        System.out.println("\n13\n");
         oneSimulation += timeChart;
 
-        oneSimulation += "\n" + getStringOfAverages(processesDone.size());
         return oneSimulation;//this is the OVERALL STRING REPRESENTATION
         //this will be sent to main, to be printed out along with all other 
         //OVERALL STRING REPRESENTATION's
-    }
-
-    /**
-     * This processes the average statistics for one simulation of this
-     * algorithm
-     *
-     * @param numProcesses the number of processes that started(were processed)
-     * during simulation
-     * @return 'averages' The string representing the averages to be attached to
-     * FCFS's OVERALL STRING REPRESENTATION
-     */
-    public String getStringOfAverages(int numProcesses) {
-        String averages = "";
-        float totalWaitingTime = 0;
-        float totalResponseTime = 0;
-        float totalTurnaroundTime = 0;
-        float waitingTime = 0;
-
-        //generates the averages for each required statistic
-        for (int i = 0; i < numProcesses; i++) {
-            waitingTime = processesDone.get(i).getWaitingTime();
-            if (waitingTime < 0) {
-                System.out.println("negative!");
-            }
-
-            totalWaitingTime += waitingTime;//processesDone.get(i).getWaitingTime();
-            totalResponseTime += processesDone.get(i).getResponseTime();
-            totalTurnaroundTime += processesDone.get(i).getTurnaroundTime();
-        }
-
-        System.out.println();
-
-        averageWaitingTime = totalWaitingTime / numProcesses;
-        averageResponseTime = totalResponseTime / numProcesses;
-        averageTurnaroundTime = totalTurnaroundTime / numProcesses;
-
-        averages += "\nThe average Waiting time was: " + averageWaitingTime;
-        averages += "\nThe average Response time was: " + averageResponseTime;
-        averages += "\nThe average Turnaround time was: " + averageTurnaroundTime + "\n\n";
-
-        return averages;
     }
 
     /**
@@ -240,12 +189,99 @@ public class Swapping {
     }
 
     /**
-     * This returns an array with the statistics information
+     * This returns number of activated processes
      *
      * @return averages
      */
-    public float[] getStatistics() {
-        float[] averages = {averageWaitingTime, averageResponseTime, averageTurnaroundTime, throughput};
-        return averages;
+    public int getThroughput() {
+
+        throughput = processesInMemory.size() + processesDone.size();
+        return throughput;
+
     }
+
+    /**
+     * This returns number of activated processes
+     *
+     * @return averages
+     */
+    //go through memory[100] and return an array list of gap objects
+    //Gaps(int gapSize, int gapLocation)
+    private ArrayList<Gaps> getGaps() {
+        ArrayList<Gaps> arrayGaps = new ArrayList<>();
+        Gaps oneGap;
+        int gapSize = 0;
+        int gapPosition;
+//        boolean first = true;
+
+        System.out.println("\ngap1\n");
+        System.out.println("");
+        for (int idx = 0; idx < memory.length; idx++) {
+//            System.out.println("\ngap2\n");
+
+            if (memory[idx].getMegaByte().equals("[__]")) {
+//                System.out.println("\ngap3\n");
+
+                gapSize++;
+            } else {
+//                System.out.println("\ngap4\n");
+
+                gapPosition = idx - gapSize;
+                oneGap = new Gaps(gapSize, gapPosition);
+                arrayGaps.add(oneGap);
+                gapSize = 0;
+            }
+        }
+//        System.out.println("\ngap5\n");
+
+//        if(first){
+//            first = false;
+//            oneGap = new Gaps(100, 0);
+//            arrayGaps.add(oneGap);
+//            return arrayGaps;
+//        }else{
+//            return arrayGaps;
+//        }
+        return arrayGaps;
+    }
+
+//not the gap size, the size of the process
+    private void addToMemory(int gapLocation, int processSize, String processName) {
+        MegaByte mByte;
+
+        for (int idx = gapLocation; idx < (gapLocation + processSize); idx++) {
+            mByte = new MegaByte(processName);
+            memory[idx] = mByte;
+        }
+
+        gapList = getGaps();
+
+        memoryToString();
+    }
+
+    private void removeFromMemory(String name) {
+        MegaByte mByte;
+
+        for (int idx = 0; idx < memory.length; idx++) {
+            if (memory[idx].getMegaByte().equals(name)) {
+                mByte = new MegaByte();
+                memory[idx] = mByte;
+            }
+        }
+
+        gapList = getGaps();
+
+        memoryToString();
+    }
+
+    private void memoryToString() {
+        for (int i = 0; i < memory.length; i++) {
+            if (i != 0 && (i % 20) == 0) {
+                currentMemoryArray += "\n" + memory[i].getMegaByte();
+            } else {
+                currentMemoryArray += memory[i].getMegaByte();
+            }
+        }
+    }
+
 }

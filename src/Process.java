@@ -19,7 +19,8 @@ public class Process {
     private boolean started;
     private Process nextProcess;	// Next process in the list with same priority (used in HPF)
     private int processSize;
-    
+    boolean shouldRemove;
+
     /**
      * Constructor for objects of class Process
      *
@@ -27,45 +28,42 @@ public class Process {
      * @param expectedTime
      * @param name
      */
-    public Process(float arrivalTime, int expectedTime, String name, int processSize) 
-	{
+    public Process(float arrivalTime, int expectedTime, String name, int processSize) {
         this.arrivalTime = arrivalTime;
         this.expectedTime = expectedTime;
         this.name = name;
         this.timeRemaining = expectedTime;
         this.processStarted = false;
         this.processSize = processSize;
+        shouldRemove = false;
     }
 
-	/**
-	 * This is the run method
-	 *
-	 */
-	public void run()
-	{
-		System.out.println("process " + name + " running...");
-	}
+    /**
+     * This is the run method
+     *
+     */
+    public void run() {
+        System.out.println("process " + name + " running...");
+    }
 
     /**
      * This returns value of waiting time
      *
      * @return value of waitingTime
      */
-    public float getWaitingTime() 
-	{
-        float waitingTime = startTime - arrivalTime; 
-        
-        return waitingTime; 
+    public float getWaitingTime() {
+        float waitingTime = startTime - arrivalTime;
+
+        return waitingTime;
     }
 
-   /**
+    /**
      * This returns value of waiting time
      *
      * @return value of startWaitingTime
      */
-    public int getStartWaitingTime() 
-	{
-        return startWaitingTime; 
+    public int getStartWaitingTime() {
+        return startWaitingTime;
     }
 
     /**
@@ -73,8 +71,7 @@ public class Process {
      *
      * @return value of processStarted
      */
-    public boolean getProcessStarted() 
-	{
+    public boolean getProcessStarted() {
         return processStarted;
     }
 
@@ -83,25 +80,22 @@ public class Process {
      *
      * @return value of responseTime
      */
-    public int getResponseTime() 
-	{
-        int responseTime = finishTime - startTime; 
-        if (responseTime < 0)
-		{
+    public int getResponseTime() {
+        int responseTime = finishTime - startTime;
+        if (responseTime < 0) {
             //pritn something and break here
             System.out.println("ResponseTime is negative");
         }
-        
+
         return responseTime;
     }
 
     /**
      * This returns the value of the response time
      *
-	 * @return 
+     * @return
      */
-    public float getTurnaroundTime() 
-	{
+    public float getTurnaroundTime() {
         return (float) finishTime - arrivalTime;
     }
 
@@ -110,9 +104,8 @@ public class Process {
      *
      * @return value of arrivalTime
      */
-    public float getArrivalTime() 
-	{
-         return arrivalTime;
+    public float getArrivalTime() {
+        return arrivalTime;
     }
 
     /**
@@ -120,19 +113,16 @@ public class Process {
      *
      * @return value of arrivalTime
      */
-    public int getExpectedTime() 
-	{
+    public int getExpectedTime() {
         return expectedTime;
     }
 
-
     /**
-     * This returns the Finish Time 
+     * This returns the Finish Time
      *
      * @return value of the time it finishes
      */
-    public int getFinishTime() 
-	{
+    public int getFinishTime() {
         return finishTime;
     }
 
@@ -142,29 +132,26 @@ public class Process {
      *
      * @param startTime
      */
-    public void setStartTime(int startTime) 
-	{
+    public void setStartTime(int startTime) {
         this.startTime = startTime;
         processStarted = true;
     }
 
-   /**
+    /**
      * This sets the startWaitingTime time value
      *
      * @param startWaitingTime
      */
-    public void setStartWaitingTime(int startWaitingTime) 
-	{
+    public void setStartWaitingTime(int startWaitingTime) {
         this.startWaitingTime = startWaitingTime;
     }
 
-	/**
+    /**
      * This sets the finish time value
      *
      * @param finishTime
      */
-    public void setFinishTime(int finishTime) 
-	{
+    public void setFinishTime(int finishTime) {
         this.finishTime = finishTime;
     }
 
@@ -173,8 +160,7 @@ public class Process {
      *
      * @param arrivalTime
      */
-    public void setArrivalTime(float arrivalTime) 
-	{
+    public void setArrivalTime(float arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
@@ -183,60 +169,52 @@ public class Process {
      *
      * @param expectedTime
      */
-    public void setExpectedTime(int expectedTime) 
-	{
+    public void setExpectedTime(int expectedTime) {
         this.expectedTime = expectedTime;
     }
-
-
 
     /**
      * This returns the name of the process, example: [1-a]
      *
      * @return
      */
-    public String getName() 
-	{
+    public String getName() {
         return name;
     }
-	
-	/**
+
+    /**
      * This returns the started boolean flag
      *
      * @return value of started
      */
-    public boolean getStarted() 
-	{
+    public boolean getStarted() {
         return started;
     }
-	
-	/**
+
+    /**
      * This sets the started flag
      *
-	 * @param started
-      */
-    public void setStarted(boolean started) 
-	{
+     * @param started
+     */
+    public void setStarted(boolean started) {
         this.started = started;
     }
 
-	/**
+    /**
      * This returns the timeToFinish value
      *
      * @return value of timeToFinish
      */
-    public float getTimeToFinish() 
-	{
+    public float getTimeToFinish() {
         return timeToFinish;
     }
 
-	/**
+    /**
      * This sets the timeToFinish value
      *
      * @param timeToFinish
      */
-    public void setTimeToFinish(float timeToFinish) 
-	{
+    public void setTimeToFinish(float timeToFinish) {
         this.timeToFinish = timeToFinish;
     }
 
@@ -245,18 +223,16 @@ public class Process {
      *
      * @return timeRemaining
      */
-    public float getTimeRemaining() 
-	{
+    public float getTimeRemaining() {
         return timeRemaining;
     }
 
-	/**
+    /**
      * This sets the nextProcess value
      *
      * @param nextProcess
      */
-    public void setNextProcess(Process nextProcess) 
-	{
+    public void setNextProcess(Process nextProcess) {
         this.nextProcess = nextProcess;
     }
 
@@ -265,8 +241,7 @@ public class Process {
      *
      * @return nextProcess
      */
-    public Process getNextProcess() 
-	{
+    public Process getNextProcess() {
         return nextProcess;
     }
 
@@ -274,12 +249,11 @@ public class Process {
      * This returns the time remaining value of the process
      *
      */
-    public void runProcess() 
-	{
+    public void runProcess() {
         timeRemaining -= 1;
     }
-    
-    public int getProcessSize(){
+
+    public int getProcessSize() {
         return processSize;
     }
 
@@ -289,13 +263,21 @@ public class Process {
      * @return processString is a string made up of the values in the object
      */
     @Override
-        public String toString() {
+    public String toString() {
         String processString;
         processString = name + "\tArrival time is:  " + arrivalTime
-                + ",\tExpected time is:  " + expectedTime 
+                + ",\tExpected time is:  " + expectedTime
                 + ",\tProcess Size is: " + processSize + "\n";
 
         return processString;
+    }
+
+    public void shouldRemove() {
+        shouldRemove = true;
+    }
+    
+    public boolean getShouldRemove(){
+        return shouldRemove;
     }
 
 }

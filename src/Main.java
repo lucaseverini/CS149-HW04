@@ -11,7 +11,7 @@ import java.util.*;
 public class Main {
 
     public static final int SIMULATIONS = 1;
-    public static final int PROCESSES = 2;
+    public static final int PROCESSES = 100;
     public static final int QUANTA = 60;
 
     public static void main(String[] args) {

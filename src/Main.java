@@ -182,7 +182,7 @@ public class Main {
             processArrayList = newProcesses.generateProcesses();
             unsortedArrayList = newProcesses.getUnsortedArrayList();
 
-            swapping = new Swapping(processArrayList, unsortedArrayList);
+            swapping = new Swapping(processArrayList, unsortedArrayList, QUANTA);
             simulationString = swapping.simulateSwapping();
             if (i == 0) {
                 totalFile += "---------------------------------------------------------------------------------------";

@@ -1,23 +1,20 @@
+/*
+ * @author Arash Zahoory, Luca Severini, Romeo Stevens
+ */
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 /**
+ * This class manages the printing of text to a file
  *
- * @author arashzahoory
  */
 public class printToFile {
-
-
     /**
-     * This prints the content of String variable 'content' text file name is:
+     * This prints the incoming String parameter: text to file:
      * newFile.txt
      *
      * @param text
@@ -33,8 +30,6 @@ public class printToFile {
 
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
-            //parameter 'content' is content to be written to file
-            //should probably store in a string, then put here.
             bw.write(text);
             bw.close();
             System.out.println("\nFirst Come First Serve has been printed to file. \n");

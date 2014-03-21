@@ -1,9 +1,10 @@
+/*
+ * @author Arash Zahoory, Luca Severini, Romeo Stevens
+ */
 
 /**
- * Write a description of class Process here.
+ * Process is a class that keeps track of process object information.
  *
- * @author (your name)
- * @version (a version number or a date)
  */
 public class Process {
 
@@ -176,7 +177,7 @@ public class Process {
     /**
      * This returns the name of the process, example: [1-a]
      *
-     * @return
+     * @return name
      */
     public String getName() {
         return name;
@@ -203,7 +204,7 @@ public class Process {
     /**
      * This returns the timeToFinish value
      *
-     * @return value of timeToFinish
+     * @return timeToFinish: value of timeToFinish
      */
     public float getTimeToFinish() {
         return timeToFinish;
@@ -272,10 +273,19 @@ public class Process {
         return processString;
     }
 
+    /**
+     * This sets true/false value of whether process should be removed
+     *
+     */
     public void shouldRemove() {
         shouldRemove = true;
     }
     
+    /**
+     * This gets true/false value of whether process should be removed
+     *
+     * @return shouldRemove
+     */
     public boolean getShouldRemove(){
         return shouldRemove;
     }

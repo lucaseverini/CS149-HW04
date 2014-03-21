@@ -1,3 +1,6 @@
+/*
+ * @author Arash Zahoory, Luca Severini, Romeo Stevens
+ */
 
 import java.util.*;
 import static java.lang.Math.pow;
@@ -7,8 +10,7 @@ import static java.lang.Math.pow;
  * class that initializes it. The method that generates these processes will
  * return an array list of Process objects.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Arash Zahoory, Luca Severini, Romeo Stevens
  */
 public class ProcessGenerator {
 
@@ -32,13 +34,12 @@ public class ProcessGenerator {
         this.numProcesses = numProcesses;
         processArrayList = new ArrayList<>();
         this.RandomSeed = RandomSeed;
-
     }
 
     /**
-     * An example of a method - replace this comment with your own
+     * This generates an arrayList of process objects
      *
-     * @return an arraylist Process objects sorted by arrival time
+     * @return an Array List Process objects sorted by arrival time
      */
     public ArrayList<Process> generateProcesses() {
         int letterCounter = 65;
@@ -47,7 +48,6 @@ public class ProcessGenerator {
         int expectedTime;
         int processSize;
         
-
         generator = new Random(RandomSeed); //paramater is seed used for random number generator
 
         for (int i = 0; i < numProcesses; i++) {
@@ -60,7 +60,6 @@ public class ProcessGenerator {
             processSize = (int)Math.pow(2, (generator.nextInt(4) + 2));//size is either 4, 8, 16, or 32 mb
             //create new Process object and pass in these four
             
-
             if (letterCounter < 91) {
                 name += firstNumber + "" + (char) (letterCounter);
                 letterCounter++;
@@ -76,14 +75,7 @@ public class ProcessGenerator {
             //put the Process object in array processArray using i as index
             processArrayList.add(newProcess);
 
-            //System.out.print(newProcess.toString());
-            /*System.out.println(processArrayList.get(i).getArrivalTime()
-             + "  " + processArrayList.get(i).getExpectedTime()
-             + "  " + processArrayList.get(i).getPriority());
-             */
         }
-        //System.out.println("\n  ");
-
         unsortedArrayList = new ArrayList<>();
         unsortedArrayList = (ArrayList<Process>)processArrayList.clone();
         
@@ -100,15 +92,14 @@ public class ProcessGenerator {
             }
         });
 
-        /* for(int i = 0; i < numProcesses; i++){
-            
-         System.out.println("arrival time:  " + processArrayList.get(i).getArrivalTime()
-         + "  " + processArrayList.get(i).getExpectedTime()
-         + "  " + processArrayList.get(i).getPriority());
-         }*/
         return processArrayList;
     }
     
+    /**
+     * This returns the unsorted array List
+     *
+     * @return unsortedArrayList
+     */
     public ArrayList<Process> getUnsortedArrayList(){
         return unsortedArrayList;
     } 

@@ -1,16 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * @author Arash Zahoory, Luca Severini, Romeo Stevens
  */
 
 import java.util.*;
 
 /**
- * @author arashzahoory
+ * This is the main class of the swapping and paging simulation algorithms
+ *
  */
 public class Main {
-
-    public static final int SIMULATIONS = 1;
+    public static final int SIMULATIONS = 5;
     public static final int PROCESSES = 100;
     public static final int QUANTA = 60;
 
@@ -24,15 +23,14 @@ public class Main {
 //        String SJF;
 //        String SRT;
 
-        // ProcessGenerator: first parameter is number of processes to generate
-        // second parameter is seed number for random function.
-        ProcessGenerator newProcesses;
-        ArrayList<Process> processArrayList;
-
 //        FCFS = runFCFS();
 //        totalFile += FCFS;
 //       
-        swapping = runSwapping();
+        swapping = runSwapping(1); //run first fit
+        totalFile += swapping;
+        swapping = runSwapping(2); //run next fit
+        totalFile += swapping;
+        swapping = runSwapping(3); //run best fit
         totalFile += swapping;
 
 //        RR = runRR();
@@ -159,7 +157,15 @@ public class Main {
 //
 //        return totalFile;
 //    }
-    public static String runSwapping() {
+    
+    
+    /**
+     * This simulates the swapping algorithm
+     *
+     * @param type the type of simulation being run
+     * @return 'oneSimulation' The string representing the simulation
+     */
+    public static String runSwapping(int type) {
         ArrayList<Process> processArrayList;
         ArrayList<Process> unsortedArrayList;
 
@@ -182,13 +188,19 @@ public class Main {
             processArrayList = newProcesses.generateProcesses();
             unsortedArrayList = newProcesses.getUnsortedArrayList();
 
-            swapping = new Swapping(processArrayList, unsortedArrayList, QUANTA);
+            swapping = new Swapping(processArrayList, unsortedArrayList, QUANTA, type);
             simulationString = swapping.simulateSwapping();
             if (i == 0) {
                 totalFile += "---------------------------------------------------------------------------------------";
 
             }
-            totalFile += "\nSimulation #" + (i + 1) + " of Swapping: \n";
+            if (type == 1) {
+                totalFile += "\nSimulation #" + (i + 1) + " of Swapping First Fit: \n";
+            }else if (type == 2) {
+                totalFile += "\nSimulation #" + (i + 1) + " of Swapping Next Fit: \n";
+            }else if (type == 3) {
+                totalFile += "\nSimulation #" + (i + 1) + " of Swapping Best Fit: \n";
+            }
             totalFile += simulationString;
 
             throughput += swapping.getThroughput();

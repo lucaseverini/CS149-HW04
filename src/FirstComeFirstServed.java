@@ -1,5 +1,5 @@
 /*
- ddeveloped by Arash
+ developed by Arash
  */
 
 import java.util.*;
@@ -15,8 +15,6 @@ import java.io.IOException;
  *
  * The first come first served algorithm sorts the array list based on time of
  * arrival
- *
- *
  */
 public class FirstComeFirstServed {
 

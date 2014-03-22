@@ -27,10 +27,12 @@ public class Main {
         swapping = runSwapping(3); //run best fit
         totalFile += swapping;
 		
-		Paging paging = new Paging();
-		paging.runPaging(SIMULATIONS, PROCESSES);
+		Paging paging = new Paging();	
+		totalFile += paging.runPaging(SIMULATIONS, PROCESSES);
 
 		printer.printToFile(totalFile);
+		
+		System.out.println("Done.");
     }
     
     /**

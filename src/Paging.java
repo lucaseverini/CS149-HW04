@@ -22,6 +22,7 @@ public class Paging
 	private final ArrayList<PageFrame> diskPages;
 	private int[] referenceCounter;
 	private int pageFault;
+	private String output;
 	
 	public enum TestType 
 	{  
@@ -38,15 +39,30 @@ public class Paging
 		diskPages = new ArrayList<>(maxPagesOnDisk);
 	}
 	
-	void runPaging(int runCount, int referenceCount)
+	String runPaging(int runCount, int referenceCount)
 	{
 		Process process = new Process();
+		int maxPageFault = 0, minPageFault = Integer.MAX_VALUE;
+		String worstRun = "", bestRun = "";
+		
+		output = "";
 		
 		for(int idx = 0; idx < runCount; idx++)
 		{
 			resetStatistics();	
 			process.run(TestType.FIFO, referenceCount);
 			printStatistics();
+			
+			if(pageFault > maxPageFault)
+			{
+				maxPageFault = pageFault;
+				worstRun = TestType.FIFO + " #" + (idx +1);
+			}
+			if(pageFault < minPageFault)
+			{
+				minPageFault = pageFault;
+				bestRun = TestType.FIFO + " #" + (idx +1);
+			}
 		}
 		
 		for(int idx = 0; idx < runCount; idx++)
@@ -54,6 +70,17 @@ public class Paging
 			resetStatistics();	
 			process.run(TestType.LRU, referenceCount);
 			printStatistics();
+
+			if(pageFault > maxPageFault)
+			{
+				maxPageFault = pageFault;
+				worstRun = TestType.LRU + " #" + (idx +1);
+			}
+			if(pageFault < minPageFault)
+			{
+				minPageFault = pageFault;
+				bestRun = TestType.LRU + " #" + (idx +1);
+			}
 		}
 		
 		for(int idx = 0; idx < runCount; idx++)
@@ -61,6 +88,17 @@ public class Paging
 			resetStatistics();	
 			process.run(TestType.LFU, referenceCount);
 			printStatistics();
+			
+			if(pageFault > maxPageFault)
+			{
+				maxPageFault = pageFault;
+				worstRun = TestType.LFU + " #" + (idx +1);
+			}
+			if(pageFault < minPageFault)
+			{
+				minPageFault = pageFault;
+				bestRun = TestType.LFU + " #" + (idx +1);
+			}
 		}
 		
 		for(int idx = 0; idx < runCount; idx++)
@@ -68,6 +106,17 @@ public class Paging
 			resetStatistics();	
 			process.run(TestType.MFU, referenceCount);
 			printStatistics();
+			
+ 			if(pageFault > maxPageFault)
+			{
+				maxPageFault = pageFault;
+				worstRun = TestType.MFU + " #" + (idx +1);
+			}
+			if(pageFault < minPageFault)
+			{
+				minPageFault = pageFault;
+				bestRun = TestType.MFU + " #" + (idx +1);
+			}
 		}
 	
 		for(int idx = 0; idx < runCount; idx++)
@@ -75,7 +124,23 @@ public class Paging
 			resetStatistics();	
 			process.run(TestType.RANDOM, referenceCount);
 			printStatistics();
+			
+			if(pageFault > maxPageFault)
+			{
+				maxPageFault = pageFault;
+				worstRun = TestType.RANDOM + " #" + (idx +1);
+			}
+			if(pageFault < minPageFault)
+			{
+				minPageFault = pageFault;
+				bestRun = TestType.RANDOM + " #" + (idx +1);
+			}
 		}
+		
+		output += String.format("\nBest run: %s with %d page faults\n", bestRun, minPageFault);
+		output += String.format("Worst run: %s with %d page faults\n", worstRun, maxPageFault);
+		
+		return output;
 	}
 	
 	void resetStatistics()
@@ -87,12 +152,13 @@ public class Paging
 	
 	void printStatistics()
 	{
-		System.out.printf("PageFaults: %d\n", pageFault);
+		output += String.format("\n== Statistics ==\n");
+		output += String.format("PageFaults: %d\n", pageFault);
 			
-		System.out.printf("Page - References\n");
+		output += String.format("Page - # of References\n");
 		for(int idx = 0; idx < maxPagesOnDisk; idx++)
 		{
-			System.out.printf("%-4d   %d\n", idx, referenceCounter[idx]);
+			output += String.format("%-4d   %d\n", idx, referenceCounter[idx]);
 		}
 	}
 	
@@ -127,7 +193,7 @@ public class Paging
 		{
 			test = testType;
 			
-			System.out.printf("\nRunning process with %s paging for %d references\n", testType, referenceCount);
+			output += String.format("\nRunning process with %s paging for %d references\n", testType, referenceCount);
 			
 			for(int idx = 0; idx < referenceCount; idx++)
 			{
@@ -138,7 +204,7 @@ public class Paging
 				page.referencedCount++;
 				page.lastReferenceTime = System.currentTimeMillis();
 				
-				// System.out.printf("\nPage %d referenced (%d)\n", page.id, page.referencedCount);
+				output += String.format("\nPage %d referenced (%d)\n", page.id, page.referencedCount);
 				
 				if(!page.inMemory)
 				{
@@ -180,7 +246,7 @@ public class Paging
 			page.inMemory = true;
 			page.onDisk = false;
 			
-			// System.out.printf("Page %d loaded in memory\n", page.id);
+			output += String.format("Page %d loaded in memory\n", page.id);
 		}
 	
 		private void unloadPageFromMemory()
@@ -248,17 +314,17 @@ public class Paging
 				pageToEvict.onDisk = true;
 				pageToEvict.inMemory = false;
 
-				System.out.printf("Page %d unloaded from memory\n", pageToEvict.id);
+				output += String.format("Page %d unloaded from memory\n", pageToEvict.id);
 			}
 			else
 			{
-				System.out.printf("No Page unloaded from memory\n");
+				output += String.format("No Page unloaded from memory\n");
 			}
 		}
 
 		private int generatePageReference()
 		{
-			if(rand.nextInt(9) < 7)
+			if(rand.nextInt(9) < 7)  // generate a random ∆i to be -1, 0 or +1
 			{
 				int pageOffset;
 				
@@ -270,7 +336,7 @@ public class Paging
 				
 				pageReference += pageOffset;
 			}
-			else
+			else					// randomly generate 2 ≤ ∆i ≤ 8
 			{
 				pageReference = rand.nextInt(numProcessPages);
 			}
@@ -286,7 +352,8 @@ public class Paging
 	{
 		Paging paging = new Paging();
 
-		paging.runPaging(5, 100);
+		String out = paging.runPaging(5, 100);
+		System.out.println(out);
 	}
 }
 
